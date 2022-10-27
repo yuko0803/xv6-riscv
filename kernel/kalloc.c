@@ -84,12 +84,16 @@ kalloc(void)
 int sys_freemem(void) {
   acquire(&kmem.lock);
   int mem=0;
+  struct  run *r;
+  r = kmem.freelist;
+  
   while(1) {
-    if(kmem.freelist) {
-      mem++;
+    if(r) {
+      mem ++;
     } else {
       break;
     }
+    r = r->next;
   }
   release(&kmem.lock);
   return mem;
