@@ -80,3 +80,17 @@ kalloc(void)
     memset((char*)r, 5, PGSIZE); // fill with junk
   return (void*)r;
 }
+
+int sys_freemem(void) {
+  acquire(&kmem.lock);
+  int mem=0;
+  while(1) {
+    if(kmem.freelist) {
+      mem++;
+    } else {
+      break;
+    }
+  }
+  release(&kmem.lock);
+  return mem;
+}
